@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://bjqjoshydjs31"]
+
+[ext_resource type="Script" path="res://scenes/player.gd" id="1_p08yj"]
+[ext_resource type="Texture2D" uid="uid://ccyuvbhdhp80b" path="res://assets/player/sprites/mario.png" id="1_sxv0m"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e6yiy"]
+atlas = ExtResource("1_sxv0m")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_428xg"]
+atlas = ExtResource("1_sxv0m")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eky18"]
+atlas = ExtResource("1_sxv0m")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lhqwl"]
+atlas = ExtResource("1_sxv0m")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wk7y2"]
+atlas = ExtResource("1_sxv0m")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xqeub"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e6yiy")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 0.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_428xg")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eky18")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lhqwl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wk7y2")
+}],
+"loop": true,
+"name": &"run",
+"speed": 12.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_861i6"]
+radius = 7.0
+height = 16.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_p08yj")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -16)
+sprite_frames = SubResource("SpriteFrames_xqeub")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
+shape = SubResource("CapsuleShape2D_861i6")
