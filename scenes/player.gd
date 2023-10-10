@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 var is_jumping = false
+var is_dying = false
 
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
@@ -9,8 +10,15 @@ const JUMP_VELOCITY = -400.0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var death_timer: Timer = $DeathTimer
+
+func _ready():
+	is_dying = false
+	add_to_group("Player")
 
 func _physics_process(delta):
+	if is_dying:
+		return
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -41,5 +49,34 @@ func update_animation(direction: int):
 		animated_sprite.play("run")
 	else:
 		animated_sprite.play("idle")
-
 	
+
+func _on_hitbox_body_entered(body: Node2D):
+	if body is Toad and (body as Toad).is_alive:
+		die()
+		
+func die():
+	if is_dying: 
+		return
+	is_dying = true
+	animated_sprite.play("die")
+	await player_death_movement()
+	print()
+	death_timer.start(1.0)
+
+
+func player_death_movement():
+	var start_position = position
+	var up_position = start_position.y - 50
+	var down_position = start_position.y + 300
+	
+	while position.y > up_position:
+		position.y -= 2
+		await get_tree().create_timer(0.01).timeout
+
+	while position.y < down_position:
+		position.y += 2
+		await get_tree().create_timer(0.01).timeout
+
+func _on_death_timer_timeout():
+	get_tree().reload_current_scene()

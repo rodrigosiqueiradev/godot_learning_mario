@@ -33,6 +33,14 @@ jump={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="player"
+2d_physics/layer_2="enemy"
+2d_physics/layer_3="floor"
+
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
+textures/default_filters/anisotropic_filtering_level=0
 environment/defaults/default_clear_color=Color(0, 0.607843, 0.85098, 1)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://b4ynj12c21vbw"]
+[gd_scene load_steps=8 format=3 uid="uid://b4ynj12c21vbw"]
 
 [ext_resource type="Texture2D" uid="uid://doit67e6o71nb" path="res://assets/tiles/block.png" id="1_orew1"]
 [ext_resource type="Texture2D" uid="uid://b4whn7i1ferjp" path="res://assets/tiles/brick.png" id="2_st8d2"]
 [ext_resource type="PackedScene" uid="uid://bjqjoshydjs31" path="res://scenes/player.tscn" id="3_kf04d"]
+[ext_resource type="PackedScene" uid="uid://cl8uoay7wsagh" path="res://scenes/toad.tscn" id="4_xov2g"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mk2ge"]
 texture = ExtResource("1_orew1")
@@ -19,7 +20,8 @@ texture = ExtResource("2_st8d2")
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSet" id="TileSet_l5jo2"]
-physics_layer_0/collision_layer = 1
+physics_layer_0/collision_layer = 4
+physics_layer_0/collision_mask = 3
 sources/0 = SubResource("TileSetAtlasSource_mk2ge")
 sources/1 = SubResource("TileSetAtlasSource_evwcp")
 
@@ -36,7 +38,11 @@ position = Vector2(34, 624)
 
 [node name="Camera2D" type="Camera2D" parent="TileMap/Player"]
 zoom = Vector2(3, 3)
+process_callback = 0
 limit_left = 0
 limit_top = 0
 limit_right = 1150
 limit_bottom = 650
+
+[node name="Toad" parent="TileMap" instance=ExtResource("4_xov2g")]
+position = Vector2(183, 624)
