@@ -3,14 +3,20 @@ extends CharacterBody2D
 var is_jumping = false
 var is_dying = false
 
-const SPEED = 200.0
-const JUMP_VELOCITY = -400.0
+const ACCELERATION = 10.0
+const DECCELERATION = 15.0
+const AIR_DECCELERATION = 5.0
+const MAX_SPEED = 200.0
+const JUMP_VELOCITY = 300.0
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var gravity_multiplier = 1.0
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var death_timer: Timer = $DeathTimer
+
+var max_jump = false
 
 func _ready():
 	is_dying = false
@@ -19,24 +25,32 @@ func _ready():
 func _physics_process(delta):
 	if is_dying:
 		return
-	# Add the gravity.
+	if not Input.is_action_pressed("jump") and is_jumping:
+		gravity_multiplier = 2.0
+	else:
+		gravity_multiplier = 1.0
+	# Add the gravity.		
 	if not is_on_floor():
-		velocity.y += gravity * delta
+		velocity.y += gravity * gravity_multiplier * delta
 	else:
 		is_jumping = false
 
 	# Handle Jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+		velocity.y = -JUMP_VELOCITY
 		is_jumping = true
+	
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction = Input.get_action_strength("right") - Input.get_action_strength("left")
-	if direction != 0:
-		velocity.x = SPEED * direction
+	
+	if direction > 0:
+		velocity.x = velocity.x + ACCELERATION if velocity.x < MAX_SPEED else MAX_SPEED
+	elif direction < 0:
+		velocity.x = velocity.x - ACCELERATION if velocity.x > -MAX_SPEED else -MAX_SPEED
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0, (DECCELERATION if is_on_floor() else AIR_DECCELERATION))
 	
 	update_animation(direction)
 	move_and_slide()
